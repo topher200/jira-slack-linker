@@ -29,18 +29,14 @@ module.exports = (robot) ->
       if (not robot.brain.get(ticketNumber) or
           robot.brain.get(ticketNumber) + 600000 < Date.now())
         robot.brain.set ticketNumber, Date.now()
-        responseList.push {
-            "value": "<https://wordstream.atlassian.net/browse/#{ticketNumber}|#{ticketNumber}>",
-            short: true
-        }
+        responseList.push(
+          "<https://wordstream.atlassian.net/browse/#{ticketNumber}|#{ticketNumber}>")
     # Don't send a message if we have no responses
     return unless responseList.length
     # Build all the responses into one post
-    attachment = {
-        "fields": responseList
-    }
-    msgData = {
-        channel: res.envelope.room
-        attachments: [attachment]
-    }
-    robot.adapter.customMessage msgData
+    console.log("Sending response: " + responseList)
+    robot.emit 'slack.attachment',
+      message: res.message,
+      content: {
+        text: responseList.join("\n")
+      }
