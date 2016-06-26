@@ -60,14 +60,13 @@ buildResponse = (robot, room) ->
         return callback(null, response)
       .catch (err) ->
         console.error 'Received jira error on ' + ticketNumber + '. error: ' + err.statusCode
-        return callback(err, null)
+        return callback(null, null)  # We don't return error, because that would stop every job
 
 module.exports = (robot) ->
   robot.hear /(PPC-\d+)/g, (res) ->
     responseList = []
-    async.map res.match, buildResponse(robot, res.message.room), (err, messages) ->
-      if err
-        console.log 'failed to get one or more responses'
+    async.map res.match, buildResponse(robot, res.message.room), (_, messages) ->
+      # We ignore errors, and just filter out the ones that didn't finish
       responseList = messages.filter((v) -> v != null)
       # Don't send a message if we have no responses
       if !responseList.length
