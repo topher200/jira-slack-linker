@@ -18,7 +18,7 @@
 #   t.brown@wordstream.com
 #
 # Version:
-#   1.2
+#   1.3
 module.exports = (robot) ->
   robot.hear /[\s|`|\"|\(|~|\*](PPC-\d+)/g, (res) ->
     responseList = []
