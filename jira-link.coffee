@@ -19,7 +19,7 @@
 #   t.brown@wordstream.com
 #
 # Version:
-#   2.0
+#   2.1
 
 async = require('async')
 JiraApi = require('jira-client')
