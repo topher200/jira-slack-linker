@@ -67,9 +67,8 @@ buildResponse = (robot, room) ->
 
 module.exports = (robot) ->
   robot.hear /(PPC-\d+)/g, (res) ->
-    responseList = []
     async.map res.match, buildResponse(robot, res.message.room), (_, messages) ->
-      # We ignore errors, and just filter out the ones that didn't finish
+      # We ignore errors and just filter out the ones that didn't finish
       responseList = messages.filter((v) -> v != null)
       # Don't send a message if we have no responses
       if !responseList.length
