@@ -53,14 +53,17 @@ buildResponse = (robot, room) ->
     if (not robot.brain.get(ticketNumberInChannel) or
         robot.brain.get(ticketNumberInChannel) + 600000 < Date.now())
       robot.brain.set ticketNumberInChannel, Date.now()
-    jira.findIssue ticketNumber
-      .then (issue) ->
-        response = (
-            "<https://wordstream.atlassian.net/browse/#{ticketNumber}|#{ticketNumber}>: #{issue.fields.summary}")
-        return callback(null, response)
-      .catch (err) ->
-        console.error 'Received jira error on ' + ticketNumber + '. error: ' + err.statusCode
-        return callback(null, null)  # We don't return error, because that would stop every job
+      console.log "making JIRA api call for " + ticketNumberInChannel
+      jira.findIssue ticketNumber
+        .then (issue) ->
+          response = (
+              "<https://wordstream.atlassian.net/browse/#{ticketNumber}|#{ticketNumber}>: #{issue.fields.summary}")
+          console.log "got response for " + ticketNumberInChannel
+          return callback(null, response)
+        .catch (err) ->
+          console.error 'Received jira error on ' + ticketNumber + '. error: ' + err.statusCode
+    else
+      return callback(null, null)  # We don't return error, because that would stop every job
 
 module.exports = (robot) ->
   robot.hear /(PPC-\d+)/g, (res) ->
