@@ -22,7 +22,7 @@ describe 'jira-link', ->
       @room.robot.on 'slack.attachment', (event) ->
         response = event.content
       co =>
-        yield @room.user.say 'alice', 'working on PPC-123 and PPC-15501, but not /PPC-12343'
+        yield @room.user.say 'alice', 'working on PPC-123 PPC-123 and PPC-15501, but not /PPC-12343'
         yield new Promise.delay(1900)  # give our API calls some time
 
         expect(response.text).to.include("PPC")
